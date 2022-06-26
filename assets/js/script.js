@@ -26,7 +26,7 @@ const createTimeblocks = () => {
       .after('<button class="col btn saveBtn" id="save">💾</button>');
     
     //add plans to text area
-     if (plans[today][hour]) $(`#${hour}`).children("textarea").val(plans[today][hour]);
+     if (!!plans[today][hour]) $(`#${hour}`).children("textarea").val(plans[today][hour]);
   }
   checkTime();
   addListener()
