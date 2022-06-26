@@ -36,10 +36,10 @@ const createTimeblocks = () => {
 const checkTime = () => {
   $("textarea").each((i, el) => {
     el = $(el);
-    const prev = $(el).prev();
+    const prev = el.prev();
     const now = moment();
     const prevTime = moment(prev.text(), "hA");
-    el.removeClass(["past", "present", "future"]);
+    el.removeClass("past present future");
     if (prevTime.format("H") === now.format("H")) {
       el.addClass("present");
     } else if (prevTime.isBefore(now)) {
