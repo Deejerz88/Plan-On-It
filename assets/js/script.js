@@ -9,7 +9,6 @@ if (!plans) {
   plans[today] = {};
 }
 
-
 //create time blocks
 const createTimeblocks = () => {
   const timeblocks = $(".container");
@@ -24,43 +23,47 @@ const createTimeblocks = () => {
     timeslot
       .before(`<div class="hour col pt-4">${hour}</div>`)
       .after('<button class="col btn saveBtn" id="save">💾</button>');
-    
+
     //add plans to text area
-     if (!!plans[today][hour]) $(`#${hour}`).children("textarea").val(plans[today][hour]);
+    if (!!plans[today][hour])
+      $(`#${hour}`).children("textarea").val(plans[today][hour]);
   }
   checkTime();
-  addListener()
+  addListener();
 };
 
 //check if hour is in past, present, or future
 const checkTime = () => {
   $("textarea").each((i, el) => {
+    el = $(el);
     const prev = $(el).prev();
     const now = moment();
     const prevTime = moment(prev.text(), "hA");
-    if (prevTime.format('H') === now.format('H')) {
-      $(el).addClass("present");
+    el.removeClass(["past", "present", "future"]);
+    if (prevTime.format("H") === now.format("H")) {
+      el.addClass("present");
+    } else if (prevTime.isBefore(now)) {
+      el.addClass("past");
+    } else {
+      el.addClass("future");
     }
-    else if (prevTime.isBefore(now)) {
-      $(el).addClass("past");
-    } else if (prevTime.isAfter(now)) {
-      $(el).addClass("future");
-    } 
   });
 };
 
 //save plans
 const savePlan = (e) => {
-  const plan = $(e.target).prev()
-  const planTime = $(plan).prev().text()
-  plans[today][planTime] = plan.val()
-  localStorage.setItem('DailyPlanner', JSON.stringify(plans))
-}
+  const target = $(e.target);
+  if (target.attr("id") !== "save") return;
+  const plan = target.prev();
+  const planTime = $(plan).prev().text();
+  plans[today][planTime] = plan.val();
+  localStorage.setItem("DailyPlanner", JSON.stringify(plans));
+};
 
 //add save button click event listener
 const addListener = () => {
-   $("button").on("click", savePlan);
-}
+  $(".container").on("click", savePlan);
+};
 
 //check the time every minute
 setInterval(checkTime, 1000 * 60);
