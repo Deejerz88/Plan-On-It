@@ -42,10 +42,8 @@ const checkTime = () => {
       $(el).addClass("present");
     }
     else if (prevTime.isBefore(now)) {
-      console.log(prevTime, 'past')
       $(el).addClass("past");
     } else if (prevTime.isAfter(now)) {
-      console.log(prevTime, "future");
       $(el).addClass("future");
     } 
   });
