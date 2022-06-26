@@ -38,13 +38,16 @@ const checkTime = () => {
     const prev = $(el).prev();
     const now = moment();
     const prevTime = moment(prev.text(), "hA");
-    if (prevTime.isBefore(now)) {
-      $(el).addClass("past");
-    } else if (prevTime.isAfter(now)) {
-      $(el).addClass("future");
-    } else {
+    if (prevTime.format('H') === now.format('H')) {
       $(el).addClass("present");
     }
+    else if (prevTime.isBefore(now)) {
+      console.log(prevTime, 'past')
+      $(el).addClass("past");
+    } else if (prevTime.isAfter(now)) {
+      console.log(prevTime, "future");
+      $(el).addClass("future");
+    } 
   });
 };
 
