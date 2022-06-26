@@ -8,5 +8,7 @@ Clicking the save icon will store that hour's plans.
 
 The Planner resets ever day.
 
-<img src='assets/images/Plan-on-it.png'>
+https://deejerz88.github.io/Plan-On-It/
+
+<img src='./assets/images/Plan-on-it.png'>
 
