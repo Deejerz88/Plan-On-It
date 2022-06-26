@@ -1,18 +1,61 @@
+const currDayEl = $("#currentDay");
+const today = moment().format("LL");
+currDayEl.text(today);
 
 
-const createTimeslots = () => {
-  const timeblocks = $("#timeblocks");
-  for (i = 9; i <= 17; i++) {
-    let time = moment(i, 'H').format('hA')
-    let timeslot = $('<input class="col-10" type="text">')
-    let row = $(`<div id=${time} class="row">`); 
-    timeblocks.append(row)
-    row.append(timeslot)
-    timeslot
-      .before(`<p class="col"></p>`)
-      .after('<p class="col" id="save">💾</p>');;
-    $(`#${time}`).children().first().text(time)
-  }
+let plans = JSON.parse(localStorage.getItem("DailyPlanner"));
+if (!plans) {
+  plans = {};
+  plans[today] = {};
 }
 
-$(window).on("load", createTimeslots);
+const createTimeblocks = () => {
+  const timeblocks = $(".container");
+  for (i = 9; i <= 17; i++) {
+    const hour = moment(i, "H").format("hA");
+    const row = $(`<div id=${hour} class="row time-block">`);
+    const timeslot = $('<textarea class="col-10 form-control">');
+
+    timeblocks.append(row);
+    row.append(timeslot);
+
+    timeslot
+      .before(`<div class="hour col pt-4">${hour}</div>`)
+      .after('<button class="col btn saveBtn" id="save">💾</button>');
+    
+    
+     if (plans[today][hour]) $(`#${hour}`).children("textarea").val(plans[today][hour]);
+  }
+  checkTime();
+  addListener()
+};
+
+const checkTime = () => {
+  $("textarea").each((i, el) => {
+    const prev = $(el).prev();
+    const now = moment();
+    const prevTime = moment(prev.text(), "hA");
+    if (prevTime.isBefore(now)) {
+      $(el).addClass("past");
+    } else if (prevTime.isAfter(now)) {
+      $(el).addClass("future");
+    } else {
+      $(el).addClass("present");
+    }
+  });
+};
+
+const savePlan = (e) => {
+  const plan = $(e.target).prev()
+  const planTime = $(plan).prev().text()
+  plans[today][planTime] = plan.val()
+  localStorage.setItem('DailyPlanner', JSON.stringify(plans))
+}
+
+const addListener = () => {
+   $("button").on("click", savePlan);
+}
+
+setInterval(checkTime, 1000 * 60);
+
+$(window).on("load", createTimeblocks);
